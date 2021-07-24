@@ -1,25 +1,28 @@
-import React from "react";
-import logo from "./logo.svg";
+import { useAuth0 } from "@auth0/auth0-react";
+import { CssBaseline, ThemeProvider } from "@material-ui/core";
+import { Toaster } from "react-hot-toast";
+import { useRoutes } from "react-router";
 
-function App() {
+import routes from "./routes";
+import { defaultTheme } from "./themes";
+
+export default () => {
+  const routing = useRoutes(routes);
+  const { error, isLoading } = useAuth0();
+
+  if (error) {
+    return <div>Oops... {error.message}</div>;
+  }
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ThemeProvider theme={defaultTheme}>
+      <CssBaseline />
+      <Toaster position="top-center" />
+      {routing}
+    </ThemeProvider>
   );
-}
-
-export default App;
+};
